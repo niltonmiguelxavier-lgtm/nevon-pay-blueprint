@@ -1,0 +1,21 @@
+// Template for a self-managed Wrangler deployment. Not used by Lovable hosting.
+// Copy to wrangler.jsonc only when deploying with Wrangler yourself and fill in real IDs
+// (created via `wrangler hyperdrive create`, `wrangler r2 bucket create`, `wrangler queues create`).
+{
+  "name": "nevon-pay",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "APP_ENV": "production",
+    "LOG_LEVEL": "info",
+    "PAYMENTS_MODE": "sandbox",
+    "CORS_ALLOWED_ORIGINS": "https://your-domain.example"
+  },
+  "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_ID>" }],
+  "r2_buckets": [{ "binding": "PRIVATE_FILES", "bucket_name": "nevon-pay-private" }],
+  "queues": {
+    "producers": [{ "binding": "JOBS", "queue": "nevon-pay-jobs" }],
+    "consumers": [{ "queue": "nevon-pay-jobs", "max_retries": 5, "dead_letter_queue": "nevon-pay-jobs-dlq" }]
+  }
+  // Secrets (never here): `wrangler secret put DATABASE_URL`
+}
